@@ -11,11 +11,14 @@ export const RoomTooltip = ({ x, y, text }: Props) => {
         left: x,
         top: y,
         transform: 'translate(-50%, -100%)',
+        willChange: 'transform, opacity',
       }}
       className="
         absolute
         z-50
         pointer-events-none
+
+        hidden md:block
         animate-tooltip
       "
     >
@@ -27,14 +30,17 @@ export const RoomTooltip = ({ x, y, text }: Props) => {
           bg-white
           px-4
           py-3
+
           text-[13px]
+          leading-[18px]
           text-[#121212]
+
           shadow-[0_8px_24px_rgba(0,0,0,0.12)]
         "
       >
         {text}
 
-        {/* ХВОСТИК */}
+        {/* ===== ХВОСТИК ===== */}
         <div
           className="
             absolute
