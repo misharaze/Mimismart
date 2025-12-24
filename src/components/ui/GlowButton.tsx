@@ -1,11 +1,11 @@
 import { useState } from 'react'
 
 type Props = {
-    children: React.ReactNode
+  children: React.ReactNode
   className?: string
 }
 
-export const GlowButton = ({ children, className }: Props) => {
+export const GlowButton = ({ children, className = '' }: Props) => {
   const [pos, setPos] = useState({ x: 0, y: 0 })
   const [hover, setHover] = useState(false)
 
@@ -20,7 +20,7 @@ export const GlowButton = ({ children, className }: Props) => {
           y: e.clientY - rect.top,
         })
       }}
-      className="
+      className={`
         relative
         mt-6
         flex
@@ -31,7 +31,8 @@ export const GlowButton = ({ children, className }: Props) => {
         rounded-full
         bg-white
         shadow
-      "
+        ${className}
+      `}
       style={{
         width: 249,
         height: 40,
