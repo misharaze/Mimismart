@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import {  useState } from 'react'
 
 type Room = {
   id: string
@@ -24,7 +24,7 @@ const rooms: Room[] = [
     id: 'garage',
     name: 'Гараж',
     path: `M 900 200 L 1200 200 L 1200 600 L 900 600 Z`,
-    lightCenter: { x: 1050, y: 380 },
+    lightCenter: { x: 1050, y: 370 },
     tooltip: { x: 1200, y: 320, text: 'Камера реагирует на движение' },
   },
 ]
@@ -41,171 +41,153 @@ export const ApartmentSVG = ({ mode, onHover, onSelect }: Props) => {
     typeof window !== 'undefined' &&
     ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
-  const [activeRoomId, setActiveRoomId] = useState<string | null>(null)
-
-  const blinkRef = useRef(0)
-  const lastMouse = useRef<{ x: number; y: number; t: number } | null>(null)
-  const [blink, setBlink] = useState(0)
-
-  /* ===== МОРГАНИЕ (ТОЛЬКО DESKTOP) ===== */
-  useEffect(() => {
-    if (isTouch) return
-
-    let raf: number
-    const loop = () => {
-      blinkRef.current += 0.03 + blink * 0.2
-      raf = requestAnimationFrame(loop)
-    }
-    loop()
-    return () => cancelAnimationFrame(raf)
-  }, [blink, isTouch])
-
-  /* ===== СКОРОСТЬ МЫШИ (DESKTOP) ===== */
-  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!isNight || isTouch) return
-
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const now = performance.now()
-
-    if (lastMouse.current) {
-      const dx = x - lastMouse.current.x
-      const dy = y - lastMouse.current.y
-      const dt = now - lastMouse.current.t || 1
-      const speed = Math.sqrt(dx * dx + dy * dy) / dt
-      setBlink(Math.min(speed * 18, 1))
-    }
-
-    lastMouse.current = { x, y, t: now }
-  }
-
-  const currentRoom = activeRoomId
+  const [activeRoom, setActiveRoom] = useState<string | null>(null)
 
   return (
-    <svg
-      viewBox="0 0 1440 820"
-      className="w-full h-auto max-h-[100vh]"
-      preserveAspectRatio="xMidYMid meet"
-      onMouseMove={handleMouseMove}
+    <div
+      className="relative w-full h-auto max-h-[100svh]"
+      style={{ backgroundColor: isNight ? '#0B0D10' : 'white' }}
     >
-      {/* ФОН */}
-      <image href="/apartment-plan.png" width="1440" height="820" />
 
-      {/* НОЧЬ (упрощена на mobile) */}
-      {isNight && (
-        <rect
+
+
+      <svg
+        viewBox="0 0 1440 820"
+        className="w-full h-auto"
+        preserveAspectRatio="xMidYMid meet"
+      >
+
+
+        <image
+          href={isNight ? '/apartmentnight.png' : '/apartmentday.png'}
           width="1440"
           height="820"
-          fill={isTouch ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0.45)'}
-          pointerEvents="none"
         />
-      )}
 
-      <defs>
-        <radialGradient id="light-gradient">
-          <stop offset="0%" stopColor="rgba(255,255,220,0.9)" />
-          <stop offset="60%" stopColor="rgba(255,255,220,0.35)" />
-          <stop offset="100%" stopColor="rgba(255,255,220,0)" />
-        </radialGradient>
 
-        <radialGradient id="garage-glow">
-          <stop offset="0%" stopColor="rgba(255,210,120,0.6)" />
-          <stop offset="70%" stopColor="rgba(255,190,80,0.15)" />
-          <stop offset="100%" stopColor="rgba(255,190,80,0)" />
-        </radialGradient>
-      </defs>
+  {isNight && (
+    <>
+      <circle
+        cx="1289"
+        cy="440"
+        r="4"
+        className="car-light"
+      />
+      <circle
+        cx="1382"
+        cy="440"
+        r="4"
+        className="car-light delay"
+      />
+    </>
+  )}
 
-      {/* 🟡 ЖЁЛТЫЙ СВЕТ ГАРАЖА */}
-      {isNight && (
-        <ellipse
-          cx="1050"
-          cy="420"
-          rx="260"
-          ry="230"
-          fill="url(#garage-glow)"
-          opacity={
-            currentRoom === 'garage'
-              ? isTouch
-                ? 0.85
-                : 0.85 + Math.sin(blinkRef.current * 0.6) * 0.1
-              : 0.6
-          }
-          pointerEvents="none"
+
+  <>
+  
+    <g>
+    
+
+      <circle cx="207" cy="538" r="6" fill="none" stroke="rgba(223, 210, 217, 0.85)">
+        <animate
+          attributeName="r"
+          from="6"
+          to="26"
+          dur="2s"
+          repeatCount="indefinite"
         />
-      )}
+        <animate
+          attributeName="opacity"
+          from="0.8"
+          to="0"
+          dur="2s"
+          repeatCount="indefinite"
+        />
+      </circle>
+    </g>
 
-      {/* 💡 СВЕТ КОМНАТ */}
-      {isNight &&
-        rooms.map(room => (
-          <circle
+
+    <g>
+ 
+
+      <circle cx="207" cy="538" r="6" fill="none" stroke="rgba(223, 210, 217, 0.85)">
+        <animate
+          attributeName="r"
+          from="6"
+          to="26"
+          dur="2s"
+          begin="1s"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="opacity"
+          from="0.8"
+          to="0"
+          dur="2s"
+          begin="1s"
+          repeatCount="indefinite"
+        />
+      </circle>
+    </g>
+
+    <g>
+ 
+
+      <circle cx="207" cy="538" r="6" fill="none" stroke="rgba(223, 210, 217, 0.85)">
+        <animate
+          attributeName="r"
+          from="6"
+          to="26"
+          dur="2s"
+          begin="1s"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="opacity"
+          from="0.8"
+          to="0"
+          dur="2s"
+          begin="1s"
+          repeatCount="indefinite"
+        />
+      </circle>
+    </g>
+
+
+  </>
+
+
+
+
+
+
+
+        {rooms.map(room => (
+          <path
             key={room.id}
-            cx={room.lightCenter.x}
-            cy={room.lightCenter.y}
-            r="200"
-            fill="url(#light-gradient)"
-            opacity={currentRoom === room.id ? 0.7 : 0}
-            pointerEvents="none"
+            d={room.path}
+            fill="transparent"
+            cursor="pointer"
+            onMouseEnter={() => {
+              if (isTouch || !isNight) return
+              setActiveRoom(room.id)
+              onHover({ id: room.id, name: room.name, tooltip: room.tooltip })
+            }}
+            onMouseLeave={() => {
+              if (isTouch) return
+              setActiveRoom(null)
+              onHover(null)
+            }}
+            onClick={() => {
+              if (!isNight) return
+              setActiveRoom(room.id)
+              onSelect({ id: room.id, name: room.name })
+            }}
           />
         ))}
+      </svg>
 
-      {/* 📷 КАМЕРА (ТОЛЬКО DESKTOP) */}
-      {isNight && !isTouch && (
-        <g
-          style={{
-            transformOrigin: '1050px 260px',
-            transform:
-              currentRoom === 'garage'
-                ? 'translate(-6px,4px) rotate(-6deg)'
-                : 'none',
-            transition: 'transform 0.8s ease',
-          }}
-          pointerEvents="none"
-        >
-          <circle cx="1050" cy="260" r="10" fill="#5BB0FF" />
-          <rect x="1040" y="260" width="20" height="12" rx="4" fill="#E6F2FF" />
-        </g>
-      )}
 
-      {/* ПУНКТИР */}
-      {rooms.map(room => (
-        <path
-          key={room.id}
-          d={room.path}
-          fill="none"
-          stroke="#5BB0FF"
-          strokeWidth="2"
-          strokeDasharray="6 4"
-          opacity={currentRoom === room.id ? 1 : 0}
-          pointerEvents="none"
-        />
-      ))}
-
-      {/* ИНТЕРАКТИВ */}
-      {rooms.map(room => (
-        <path
-          key={room.id + '-hit'}
-          d={room.path}
-          fill="transparent"
-          cursor="pointer"
-          onMouseEnter={() => {
-            if (isTouch || !isNight) return
-            setActiveRoomId(room.id)
-            onHover({ id: room.id, name: room.name, tooltip: room.tooltip })
-          }}
-          onMouseLeave={() => {
-            if (isTouch) return
-            setActiveRoomId(null)
-            onHover(null)
-          }}
-          onClick={() => {
-            if (!isNight) return
-            setActiveRoomId(room.id)
-            onHover({ id: room.id, name: room.name, tooltip: room.tooltip })
-            onSelect({ id: room.id, name: room.name })
-          }}
-        />
-      ))}
-    </svg>
+    </div>
   )
 }

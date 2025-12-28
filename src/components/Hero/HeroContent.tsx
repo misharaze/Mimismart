@@ -157,7 +157,8 @@ export const HeroContent = ({ mode, onToggle }: Props) => {
   </span>
 </button>
 
-
+<div className="flex items-center gap-3">
+  
       {/* ===== ЗАГОЛОВОК ===== */}
       <h1
         className="
@@ -179,6 +180,10 @@ export const HeroContent = ({ mode, onToggle }: Props) => {
       >
         Умный дом под ключ
       </h1>
+ <span className="glow-dot" />
+
+</div>
+
 
       {/* ===== ОПИСАНИЕ ===== */}
       <p
@@ -200,12 +205,18 @@ export const HeroContent = ({ mode, onToggle }: Props) => {
         Автоматическое управление всеми системами дома.
       </p>
 
-      {/* ===== КНОПКА ===== */}
+  
+
       <div className="mt-[80px] max-md:mt-8 max-md:flex max-md:justify-center">
+
+
+
         <GlowButton className="w-[249px] h-[40px]">
+            <div className="glow-move" />
           Узнать больше
         </GlowButton>
       </div>
     </div>
+ 
   )
 }

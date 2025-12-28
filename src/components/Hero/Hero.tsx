@@ -4,6 +4,13 @@ import { RoomPanel } from '../room/RoolmPanel'
 import { HeroContent } from './HeroContent'
 import { RoomTooltip } from '../room/RoomTooltip'
 
+type Props = {
+  mode: 'day' | 'night'
+  setMode: React.Dispatch<React.SetStateAction<'day' | 'night'>>
+}
+
+
+
 type HoveredRoom = {
   id: string
   name: string
@@ -14,8 +21,9 @@ type HoveredRoom = {
   }
 }
 
-export const Hero = () => {
-  const [mode, setMode] = useState<'day' | 'night'>('day')
+
+export const Hero = ({ mode, setMode }: Props) => {
+ 
   const [activeRoom, setActiveRoom] = useState<{ id: string; name: string } | null>(null)
   const [hoveredRoom, setHoveredRoom] = useState<HoveredRoom | null>(null)
 
