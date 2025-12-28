@@ -41,7 +41,7 @@ export const ApartmentSVG = ({ mode, onHover, onSelect }: Props) => {
     typeof window !== 'undefined' &&
     ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
-  const [activeRoom, setActiveRoom] = useState<string | null>(null)
+  const [, setActiveRoom] = useState<string | null>(null)
 
   return (
     <div
